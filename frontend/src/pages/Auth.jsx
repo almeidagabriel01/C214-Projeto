@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Login from '../components/Login';
-import Register from '../components/Register';
+import Login from '../components/Auth/Login';
+import Register from '../components/Auth/Register';
 import bgImageLogin from '../assets/images/2.png';
 import bgImageRegister from '../assets/images/1.png';
 
