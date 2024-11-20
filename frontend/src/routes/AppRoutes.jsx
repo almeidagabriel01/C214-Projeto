@@ -4,6 +4,7 @@ import Auth from '../pages/Auth';
 import RecipePage from '../pages/RecipePage';
 import Dashboard from '../pages/DashboardPage';
 
+
 const AppRoutes = () => {
   return (
     <Router>
