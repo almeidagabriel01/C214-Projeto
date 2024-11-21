@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Header from "../components/Header";
+import { Link } from "react-router-dom";
 import imagem1 from '../assets/images/3.jpg';
 import imagem2 from '../assets/images/4.jpg';
 
@@ -24,6 +26,7 @@ const App = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#F4EDE2' }}>
+      <div><Header/>
       <div className="w-full h-screen rounded-lg flex flex-col md:flex-row shadow-lg" style={{ backgroundColor: '#F4EDE2' }}>
         {/* Seção de Texto */}
         <div className="ml-20 md:w-1/2 flex flex-col items-start justify-center space-y-12">
@@ -34,7 +37,11 @@ const App = () => {
             Bem-vindo ao nosso site de receitas interativas, aqui você pode explorar um mundo de novas receitas e também compartilhar!
           </p>
           <button className="hover:bg-black text-white font-semibold w-1/3 h-16 rounded-full bg-[#4b3028]" style={{fontFamily: 'Space Mono' }}>
-            Comece a cozinhar
+          <Link
+            to="/login"
+          >
+            Fazer Login
+          </Link>
           </button>
         </div>
 
@@ -54,6 +61,7 @@ const App = () => {
             ))}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
