@@ -5,6 +5,7 @@ import RecipePage from '../pages/RecipePage';
 import Dashboard from '../pages/DashboardPage';
 import Inicial from '../pages/Inicial';
 import MyRecipe from '../pages/MyRecipes'
+import AddRecipe from '../pages/AddRecipe'
 
 
 const AppRoutes = () => {
@@ -12,7 +13,7 @@ const AppRoutes = () => {
     <Router>
       <Routes>
         {/* Redireciona a rota "/" para "/login" */}
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/home" />} />
         
         {/* Define a rota de login */}
         <Route path="/login" element={<Auth />} />
@@ -20,6 +21,7 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/home" element={<Inicial />} />
         <Route path="/minhas-receitas" element={<MyRecipe/>} />
+        <Route path="/adicionar-receita" element={<AddRecipe/>}/>
       </Routes>
     </Router>
   );
