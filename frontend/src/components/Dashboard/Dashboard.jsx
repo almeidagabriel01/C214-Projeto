@@ -20,7 +20,7 @@ const cards = [
 
 const Dashboard = () => {
   return (
-    <div className="px-8 py-10 bg-[#f5f0e8] min-h-screen flex flex-col items-center">
+    <div className="flex flex-col flex-grow px-8 py-10 bg-[#f5f0e8] items-center">
       <div className="flex flex-row justify-center gap-10 w-full max-w-6xl">
         {cards.map((card, index) => (
           <DashboardCard key={index} {...card} />

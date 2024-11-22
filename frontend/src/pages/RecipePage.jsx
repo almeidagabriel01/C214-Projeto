@@ -1,11 +1,9 @@
 import React from "react";
-import Header from "../components/Header";
 import RecipeGrid from "../components/Recipe/RecipeGrid";
 
 const RecipePage = () => {
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <Header />
+    <div className="flex flex-col flex-grow bg-[#F4EDE2]">
       <RecipeGrid />
     </div>
   );

@@ -1,15 +1,38 @@
-// src/components/Register.jsx
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import api from '../../api/axios';
+import { AuthContext } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    // Lógica de registro
-    console.log('Cadastro:', { name, email, password });
+    setError('');
+    setSuccess('');
+    try {
+      const response = await api.post('/register', {
+        username,
+        password,
+      });
+      if (response.status === 200) {
+        setSuccess('Usuário cadastrado com sucesso!');
+        const { token } = response.data;
+        login(token, { username });
+        navigate('/inicio');
+      }
+    } catch (err) {
+      if (err.response && err.response.status === 400) {
+        setError(err.response.data.detail || 'Erro ao cadastrar.');
+      } else {
+        setError('Erro de conexão. Tente novamente.');
+      }
+    }
   };
 
   return (
@@ -21,36 +44,18 @@ const Register = () => {
         <div className="relative mb-6">
           <input
             type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="peer w-full border-b-2 border-gray-300 focus:border-[#4b3028] outline-none pt-6 pb-1.5 transition-all placeholder-transparent cursor-text"
-            placeholder="Nome"
+            placeholder="Usuário"
             required
           />
           <label
-            htmlFor="name"
+            htmlFor="username"
             className="absolute left-0 top-2 text-gray-400 text-base transition-all cursor-text peer-placeholder-shown:top-6 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:text-sm peer-focus:text-[#4b3028]"
           >
-            Nome
-          </label>
-        </div>
-
-        <div className="relative mb-6">
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="peer w-full border-b-2 border-gray-300 focus:border-[#4b3028] outline-none pt-6 pb-1.5 transition-all placeholder-transparent cursor-text"
-            placeholder="E-mail"
-            required
-          />
-          <label
-            htmlFor="email"
-            className="absolute left-0 top-2 text-gray-400 text-base transition-all cursor-text peer-placeholder-shown:top-6 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:text-sm peer-focus:text-[#4b3028]"
-          >
-            E-mail
+            Usuário
           </label>
         </div>
 
@@ -72,7 +77,13 @@ const Register = () => {
           </label>
         </div>
 
-        {/* Botão Centralizado */}
+        {error && (
+          <p className="text-red-500 text-center mb-4">{error}</p>
+        )}
+        {success && (
+          <p className="text-green-500 text-center mb-4">{success}</p>
+        )}
+
         <div className="flex justify-center mt-12">
           <button
             type="submit"

@@ -1,11 +1,9 @@
 import React from "react";
-import Header from "../components/Header";
 import Dashboard from "../components/Dashboard/Dashboard";
 
 const DashboardPage = () => {
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <Header />
+    <div className="flex flex-col flex-grow bg-gray-50">
       <Dashboard />
     </div>
   );

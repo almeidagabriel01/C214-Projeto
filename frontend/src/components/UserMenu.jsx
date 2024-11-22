@@ -1,9 +1,12 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Jdenticon from "react-jdenticon";
+import { AuthContext } from "../context/AuthContext";
 
 const UserMenu = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleMouseEnter = () => {
     setIsOpen(true);
@@ -11,6 +14,11 @@ const UserMenu = ({ user }) => {
 
   const handleMouseLeave = () => {
     setIsOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -21,9 +29,9 @@ const UserMenu = ({ user }) => {
     >
       <div className="flex items-center space-x-2 cursor-pointer">
         <div className="w-10 h-10 rounded-full overflow-hidden">
-          <Jdenticon size="40" value={user.id} />
+          <Jdenticon size="40" value={user.username} />
         </div>
-        <span className="text-gray-800 font-medium">{user.name}</span>
+        <span className="text-gray-800 font-medium">{user.username}</span>
         <svg
           className="w-4 h-4 text-gray-600"
           fill="currentColor"
@@ -39,12 +47,17 @@ const UserMenu = ({ user }) => {
       {isOpen && (
         <div className="absolute right-0 top-full mt-0 w-48 bg-white border rounded-lg shadow-lg transition-opacity duration-300 z-50">
           <Link
-            to="/my-recipes"
+            to="/minhas-receitas"
             className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
           >
             Ver Minhas Receitas
           </Link>
-          {/* Adicione mais itens de menu aqui, se necessário */}
+          <button
+            onClick={handleLogout}
+            className="w-full text-left block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+          >
+            Logout
+          </button>
         </div>
       )}
     </div>

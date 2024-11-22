@@ -26,7 +26,7 @@ const App = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#F4EDE2' }}>
-      <div><Header/>
+      <div>
       <div className="w-full h-screen rounded-lg flex flex-col md:flex-row shadow-lg" style={{ backgroundColor: '#F4EDE2' }}>
         {/* Seção de Texto */}
         <div className="ml-20 md:w-1/2 flex flex-col items-start justify-center space-y-12">

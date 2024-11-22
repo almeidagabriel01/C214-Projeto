@@ -1,13 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import api from "../../api/axios"
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Lógica de login
-    console.log('Login:', { email, password });
+    setError('');
+
+    try {
+      const response = await api.post('/token', {
+        username,
+        password,
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        transformRequest: (data) => {
+          const params = new URLSearchParams();
+          params.append('username', data.username);
+          params.append('password', data.password);
+          return params;
+        },
+      });
+
+      const { acess_token, token_type } = response.data;
+
+      // Opcional: Decodificar o token para obter informações do usuário
+      // Aqui estamos assumindo que o backend retorna apenas o token
+      // Você pode adaptar conforme a resposta do backend
+
+      login(acess_token, { username }); // Armazena o token e o usuário no contexto
+
+      navigate('/inicio'); // Redireciona para o dashboard após login
+    } catch (err) {
+      console.error(err);
+      setError('Credenciais inválidas. Tente novamente.');
+    }
   };
 
   return (
@@ -18,19 +54,19 @@ const Login = () => {
       <form onSubmit={handleSubmit}>
         <div className="relative mb-6">
           <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="peer w-full border-b-2 border-gray-300 focus:border-[#4b3028] outline-none pt-6 pb-1.5 transition-all placeholder-transparent cursor-text"
-            placeholder="E-mail"
+            placeholder="Username"
             required
           />
           <label
-            htmlFor="email"
+            htmlFor="username"
             className="absolute left-0 top-2 text-gray-400 text-base transition-all cursor-text peer-placeholder-shown:top-6 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:text-sm peer-focus:text-[#4b3028]"
           >
-            E-mail
+            Username
           </label>
         </div>
 
@@ -51,6 +87,10 @@ const Login = () => {
             Senha
           </label>
         </div>
+
+        {error && (
+          <p className="text-red-500 text-center mb-4">{error}</p>
+        )}
 
         {/* Botão Centralizado */}
         <div className="flex justify-center mt-12">
