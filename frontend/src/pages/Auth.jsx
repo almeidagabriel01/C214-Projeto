@@ -1,13 +1,22 @@
-// Auth.js
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Login from '../components/Auth/Login';
 import Register from '../components/Auth/Register';
 import bgImageLogin from '../assets/images/2.png';
 import bgImageRegister from '../assets/images/1.png';
+import { AuthContext } from '../context/AuthContext';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (auth.token) {
+      navigate('/inicio');
+    }
+  }, [auth.token, navigate]);
 
   const handleToggle = () => {
     setIsLogin(!isLogin);
