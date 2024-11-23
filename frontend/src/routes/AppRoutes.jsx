@@ -8,6 +8,8 @@ import MyRecipe from '../pages/MyRecipes';
 import AddRecipe from '../pages/AddRecipe';
 import PrivateRoute from '../components/PrivateRoute';
 import Header from '../components/Header';
+import Recipe from '../pages/Recipe';
+import Edit from '../pages/EditRecipe';
 
 const AppRoutes = () => {
   return (
@@ -23,6 +25,7 @@ const AppRoutes = () => {
             <Route path="/login" element={<Auth />} />
             <Route path="/inicio" element={<RecipePage />} />
             <Route path="/home" element={<Inicial />} />
+            
 
             {/* Rotas Protegidas */}
             <Route
