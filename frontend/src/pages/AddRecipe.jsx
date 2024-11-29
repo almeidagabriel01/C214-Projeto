@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import api from "../api/axios";
+import { AuthContext } from "../context/AuthContext";
 
 function AddRecipe() {
+  const { auth } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     title: "",
     prepTime: "",
@@ -25,16 +27,24 @@ function AddRecipe() {
     setSuccess("");
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Usuário não autenticado.");
+        return;
+      }
+
       const response = await api.post(
         "/receita/create",
         {
           nome: formData.title,
           modoDePeparo: formData.preparation,
-          tempoDePreparo: parseInt(formData.prepTime, 10), // Converte para número inteiro
+          tempoDePreparo: parseInt(formData.prepTime, 10),
+          id_creator: auth.id,
+          nome_creator: auth.user,
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Token JWT
+            Authorization: `Bearer ${token}`, // Token JWT
           },
         }
       );
@@ -49,7 +59,13 @@ function AddRecipe() {
         });
       }
     } catch (err) {
-      setError("Erro ao adicionar a receita. Verifique os dados e tente novamente.");
+      if (err.response && err.response.status === 403) {
+        setError("Permissão negada. Verifique seu token.");
+      } else if (err.response && err.response.status === 404) {
+        setError("Usuário não encontrado.");
+      } else {
+        setError("Erro ao adicionar a receita. Verifique os dados e tente novamente.");
+      }
       console.error("Erro:", err.response || err);
     }
   };

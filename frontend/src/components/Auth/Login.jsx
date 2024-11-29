@@ -13,36 +13,33 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
-      const response = await api.post('/token', {
-        username,
-        password,
-      }, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        transformRequest: (data) => {
-          const params = new URLSearchParams();
-          params.append('username', data.username);
-          params.append('password', data.password);
-          return params;
-        },
-      });
+      const response = await api.post(
+        "/token",
+        { username, password },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          transformRequest: (data) => {
+            const params = new URLSearchParams();
+            params.append("username", data.username);
+            params.append("password", data.password);
+            return params;
+          },
+        }
+      );
 
-      const { acess_token, token_type } = response.data;
+      const { acess_token, id } = response.data;
 
-      // Opcional: Decodificar o token para obter informações do usuário
-      // Aqui estamos assumindo que o backend retorna apenas o token
-      // Você pode adaptar conforme a resposta do backend
+      login(acess_token, username, id);
 
-      login(acess_token, { username }); // Armazena o token e o usuário no contexto
-
-      navigate('/inicio'); // Redireciona para o dashboard após login
+      navigate("/receitas");
     } catch (err) {
       console.error(err);
-      setError('Credenciais inválidas. Tente novamente.');
+      setError("Credenciais inválidas. Tente novamente.");
     }
   };
 

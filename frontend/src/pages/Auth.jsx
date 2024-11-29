@@ -6,17 +6,19 @@ import Register from '../components/Auth/Register';
 import bgImageLogin from '../assets/images/2.png';
 import bgImageRegister from '../assets/images/1.png';
 import { AuthContext } from '../context/AuthContext';
+import { useLocation } from 'react-router-dom';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation(); // Obtém a rota atual
 
   useEffect(() => {
-    if (auth.token) {
-      navigate('/inicio');
+    if (auth.token && location.pathname === '/login') {
+      navigate('/receitas');
     }
-  }, [auth.token, navigate]);
+  }, [auth.token, navigate, location.pathname]);
 
   const handleToggle = () => {
     setIsLogin(!isLogin);

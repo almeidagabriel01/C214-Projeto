@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Auth from '../pages/Auth';
 import RecipePage from '../pages/RecipePage';
 import Dashboard from '../pages/DashboardPage';
-import Inicial from '../pages/Inicial';
+import Home from '../pages/Home';
 import MyRecipe from '../pages/MyRecipes';
 import AddRecipe from '../pages/AddRecipe';
 import PrivateRoute from '../components/PrivateRoute';
@@ -23,9 +23,10 @@ const AppRoutes = () => {
 
             {/* Define a rota de login */}
             <Route path="/login" element={<Auth />} />
-            <Route path="/inicio" element={<RecipePage />} />
-            <Route path="/home" element={<Inicial />} />
-            
+            <Route path="/receitas" element={<RecipePage />} />
+            <Route path="/receitas/:id" element={<Recipe />} />
+            <Route path="/home" element={<Home />} />
+
 
             {/* Rotas Protegidas */}
             <Route
@@ -36,6 +37,7 @@ const AppRoutes = () => {
                 </PrivateRoute>
               }
             />
+            
             <Route
               path="/minhas-receitas"
               element={
@@ -44,11 +46,21 @@ const AppRoutes = () => {
                 </PrivateRoute>
               }
             />
+
             <Route
               path="/adicionar-receita"
               element={
                 <PrivateRoute>
                   <AddRecipe />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/editar-receita/:id"
+              element={
+                <PrivateRoute>
+                  <Edit />
                 </PrivateRoute>
               }
             />

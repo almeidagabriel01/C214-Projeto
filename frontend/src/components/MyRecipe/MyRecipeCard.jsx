@@ -1,37 +1,76 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Jdenticon from "react-jdenticon";
 import Modal from "../../components/Modal/DeleteCard";
+import api from "../../api/axios";
 
-const MyRecipeCard = ({ title, author, authorId }) => {
+const MyRecipeCard = ({ title, author, authorId, id, onDelete }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const navigate = useNavigate();
 
-  const handleDelete = () => {
-    setShowModal(false);
-    // Adicione a lógica para excluir a receita aqui
-    console.log(`Excluindo a receita: ${title}`);
+  const handleEdit = () => {
+    navigate(`/editar-receita/${id}`);
+  };
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      const token = localStorage.getItem("token");
+      await api.delete(`/receita/cursos/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setShowModal(false);
+      if (onDelete) {
+        onDelete(id);
+      }
+    } catch (err) {
+      console.error("Erro ao excluir receita:", err.response || err);
+      alert("Erro ao excluir a receita. Tente novamente.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleViewRecipe = () => {
+    navigate(`/receitas/${id}`);
   };
 
   return (
     <>
-      <div className="relative bg-white rounded-lg shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
+      <div
+        className="relative bg-white rounded-lg shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300 cursor-pointer"
+        onClick={handleViewRecipe} // Redireciona ao clicar na receita
+      >
         <div className="w-full h-64">
           <button
             className="absolute top-2 right-2 text-gray-600 hover:text-black text-3xl"
-            onClick={() => setShowMenu(!showMenu)}
+            onClick={(e) => {
+              e.stopPropagation(); // Impede a propagação do evento para evitar redirecionamento
+              setShowMenu(!showMenu);
+            }}
           >
-            &#x22EE; {/* Caractere dos três pontos verticais */}
+            &#x22EE;
           </button>
 
-          {/* Menu de opções */}
           {showMenu && (
             <div className="absolute top-10 right-2 bg-white shadow-md border rounded-md w-32 z-10">
-              <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+              <button
+                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                onClick={(e) => {
+                  e.stopPropagation(); // Impede a propagação do evento
+                  handleEdit();
+                }}
+              >
                 Editar
               </button>
               <button
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation(); // Impede a propagação do evento
                   setShowMenu(false);
                   setShowModal(true);
                 }}
@@ -44,7 +83,6 @@ const MyRecipeCard = ({ title, author, authorId }) => {
           <Jdenticon value={title} style={{ width: "100%", height: "100%" }} />
         </div>
 
-        {/* Ajustamos o gradiente para melhorar a visibilidade do título */}
         <div className="absolute bottom-0 w-full px-4 py-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white">
           <h3 className="text-2xl font-bold" style={{ fontFamily: "Roboto, sans-serif" }}>
             {title}
@@ -56,7 +94,6 @@ const MyRecipeCard = ({ title, author, authorId }) => {
         </div>
       </div>
 
-      {/* Modal de confirmação */}
       {showModal && (
         <Modal>
           <div className="bg-white rounded-lg shadow-lg p-6 w-80">
@@ -67,15 +104,22 @@ const MyRecipeCard = ({ title, author, authorId }) => {
             <div className="flex justify-end gap-4">
               <button
                 className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                onClick={() => setShowModal(false)}
+                onClick={(e) => {
+                  e.stopPropagation(); // Impede a propagação do evento
+                  setShowModal(false);
+                }}
               >
                 Cancelar
               </button>
               <button
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                onClick={handleDelete}
+                onClick={(e) => {
+                  e.stopPropagation(); // Impede a propagação do evento
+                  handleDelete();
+                }}
+                disabled={deleting}
               >
-                Excluir
+                {deleting ? "Excluindo..." : "Excluir"}
               </button>
             </div>
           </div>

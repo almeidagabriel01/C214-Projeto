@@ -11,11 +11,11 @@ const Header = () => {
   return (
     <header className="bg-white shadow-md px-8 py-4 flex justify-between items-center">
       <NavLink to="/home" className="flex items-center space-x-3">
-        <img src={logo} alt="Culinaire" className="h-10"/>
+        <img src={logo} alt="Culinaire" className="h-10" />
       </NavLink>
       <nav className="space-x-6">
         <NavLink
-          to="/inicio"
+          to="/receitas"
           className={({ isActive }) =>
             isActive
               ? "text-[#3F2A17] border-b-2 border-[#3F2A17] text-lg font-medium transition-all duration-300"
