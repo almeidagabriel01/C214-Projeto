@@ -29,9 +29,9 @@ const UserMenu = ({ user }) => {
     >
       <div className="flex items-center space-x-2 cursor-pointer">
         <div className="w-10 h-10 rounded-full overflow-hidden">
-          <Jdenticon size="40" value={user.username} />
+          <Jdenticon size="40" value={user} />
         </div>
-        <span className="text-gray-800 font-medium">{user.username}</span>
+        <span className="text-gray-800 font-medium">{user}</span>
         <svg
           className="w-4 h-4 text-gray-600"
           fill="currentColor"

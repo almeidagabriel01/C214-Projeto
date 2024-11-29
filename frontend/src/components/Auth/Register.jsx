@@ -16,22 +16,29 @@ const Register = () => {
     setError('');
     setSuccess('');
     try {
-      const response = await api.post('/register', {
-        username,
-        password,
-      });
-      if (response.status === 200) {
-        setSuccess('Usuário cadastrado com sucesso!');
-        const { token } = response.data;
-        login(token, { username });
-        navigate('/inicio');
+      // Registro
+      const registerResponse = await api.post('/register', { username, password });
+      if (registerResponse.status === 200) {
+        // Login automático
+        const loginResponse = await api.post('/token', { username, password }, {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          transformRequest: (data) => {
+            const params = new URLSearchParams();
+            params.append('username', data.username);
+            params.append('password', data.password);
+            return params;
+          },
+        });
+  
+        const { acess_token, id } = loginResponse.data; // Supondo que o backend retorna o id
+  
+        // Atualiza o contexto com token, username e id
+        login(acess_token, username, id);
+  
+        navigate('/receitas'); // Redireciona somente após o login
       }
     } catch (err) {
-      if (err.response && err.response.status === 400) {
-        setError(err.response.data.detail || 'Erro ao cadastrar.');
-      } else {
-        setError('Erro de conexão. Tente novamente.');
-      }
+      setError('Erro ao registrar ou logar. Tente novamente.');
     }
   };
 
